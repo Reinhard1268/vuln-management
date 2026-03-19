@@ -1,0 +1,48 @@
+{
+  "_comment": "File: thehive-integration/ticket-templates/vuln-batch-template.json",
+  "template_name": "medium-vuln-batch",
+  "severity": 2,
+  "severity_label": "Medium",
+  "tlp": 2,
+  "pap": 2,
+  "tags": ["vulnerability", "medium", "batch", "vuln-mgmt"],
+  "title_format": "Medium Vuln Batch: {count} findings — Week {week}",
+  "description_format": "## Weekly Medium Vulnerability Batch\n\n**Period:** {period}\n**Total Findings:** {count}\n**Hosts Affected:** {hosts}\n**Source:** {sources}\n\n---\n\n### Vulnerability Summary\n\n{vuln_table}\n\n---\n\n**SLA Deadline:** {sla_deadline} (30 days from detection)",
+  "tasks_per_vuln": [
+    {
+      "title_format": "Patch: {cve} on {host}",
+      "description": "Apply remediation for this CVE on the affected host. Verify fix post-patch.",
+      "order_base": 1
+    }
+  ],
+  "batch_tasks": [
+    {
+      "title": "Weekly Batch Review",
+      "description": "Review all medium vulnerabilities in this batch. Prioritise by risk score.",
+      "order": 0
+    },
+    {
+      "title": "Batch Remediation — Apply All Patches",
+      "description": "Apply patches for all vulnerabilities in this batch during scheduled maintenance window.",
+      "order": 98
+    },
+    {
+      "title": "Batch Validation — Re-Scan All Hosts",
+      "description": "Run scanner against all affected hosts to confirm all vulnerabilities are resolved.",
+      "order": 99
+    },
+    {
+      "title": "Close Batch and Update Dashboard",
+      "description": "Mark all individual vulns resolved in the dashboard. Close this case.",
+      "order": 100
+    }
+  ],
+  "custom_fields": {
+    "vuln_count":       { "type": "integer", "label": "Vulnerability Count" },
+    "affected_hosts":   { "type": "string",  "label": "Affected Hosts" },
+    "scanner_sources":  { "type": "string",  "label": "Scanner Sources" },
+    "sla_deadline":     { "type": "date",    "label": "SLA Deadline (30 days)" },
+    "all_patched":      { "type": "boolean", "label": "All Patched" },
+    "all_verified":     { "type": "boolean", "label": "All Verified Fixed" }
+  }
+}

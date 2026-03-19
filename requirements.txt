@@ -1,0 +1,20 @@
+# File: requirements.txt
+
+flask==3.0.3
+flask-cors==4.0.1
+requests==2.32.3
+python-dotenv==1.0.1
+rich==13.7.1
+colorama==0.4.6
+pandas==2.2.2
+numpy==1.26.4
+matplotlib==3.9.0
+reportlab==4.2.0
+schedule==1.2.2
+pytest==8.2.2
+tqdm==4.66.4
+tabulate==0.9.0
+python-gvm==24.2.0
+cvss==3.0
+jinja2==3.1.4
+elasticsearch==8.13.2

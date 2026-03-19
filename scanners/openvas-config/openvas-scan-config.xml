@@ -1,0 +1,104 @@
+<!-- openvas-scan-config.xml -->
+
+<create_config>
+  <name>Lab Full and Fast - Custom</name>
+  <comment>Full and fast scan for lab network with all NVT families enabled. Safe checks on.</comment>
+  <copy>daba56c8-73ec-11df-a475-002264764cea</copy>
+
+  <preference>
+    <scanner_name>scanner</scanner_name>
+    <name>scanner:Scanner Type</name>
+    <value>OpenVAS Default</value>
+  </preference>
+
+  <preference>
+    <scanner_name>scanner</scanner_name>
+    <name>scanner:Port scan type</name>
+    <value>SYN</value>
+  </preference>
+
+  <preference>
+    <scanner_name>scanner</scanner_name>
+    <name>scanner:Safe checks</name>
+    <value>yes</value>
+  </preference>
+
+  <preference>
+    <scanner_name>scanner</scanner_name>
+    <name>scanner:Optimize the test</name>
+    <value>yes</value>
+  </preference>
+
+  <preference>
+    <scanner_name>scanner</scanner_name>
+    <name>scanner:Max hosts</name>
+    <value>10</value>
+  </preference>
+
+  <preference>
+    <scanner_name>scanner</scanner_name>
+    <name>scanner:Max checks</name>
+    <value>5</value>
+  </preference>
+
+  <preference>
+    <scanner_name>scanner</scanner_name>
+    <name>scanner:Timeout</name>
+    <value>60</value>
+  </preference>
+
+  <!-- Port list: All IANA assigned TCP + UDP -->
+  <port_list id="33d0cd82-57c6-11e1-8ed1-406186ea4fc5"/>
+
+  <!-- NVT Families — all enabled -->
+  <family_selection>
+    <growing>1</growing>
+    <family><name>AIX Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Amazon Linux Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Brute force attacks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Buffer overflow</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>CentOS Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Credentials</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Databases</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Debian Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Default Accounts</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Denial of Service</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>FTP</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Fedora Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Finger abuses</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Firewalls</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>FreeBSD Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Gain a shell remotely</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>General</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Gentoo Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>HP-UX Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>IT-Grundschutz</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>IMAP4 / POP3</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Malware</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Mandrake Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Misc.</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Netware</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Nmap NSE</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Nmap NSE net</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>OVAL definitions</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Peer-To-Peer File Sharing</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Policy</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Port scanners</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Privilege escalation</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Product detection</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>RPC</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Red Hat Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Remote file access</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>SMTP problems</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>SNMP</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Slackware Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Solaris Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>SuSE Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Ubuntu Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>VMware Local Security Checks</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Web Servers</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Web application abuses</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Windows</name><all_nvts>1</all_nvts><growing>1</growing></family>
+    <family><name>Windows : Microsoft Bulletins</name><all_nvts>1</all_nvts><growing>1</growing></family>
+  </family_selection>
+</create_config>

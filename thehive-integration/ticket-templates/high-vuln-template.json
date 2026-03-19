@@ -1,0 +1,50 @@
+{
+  "_comment": "File: thehive-integration/ticket-templates/high-vuln-template.json",
+  "template_name": "high-vulnerability",
+  "severity": 3,
+  "severity_label": "High",
+  "tlp": 2,
+  "pap": 2,
+  "tags": ["vulnerability", "high", "vuln-mgmt"],
+  "title_format": "HIGH Vuln: {cve} on {host}",
+  "description_format": "## High Severity Vulnerability Identified\n\n**CVE:** {cve}\n**CVSS Score:** {cvss_score}\n**EPSS Score:** {epss_score}\n**Risk Score:** {risk_score}/100\n**Affected Host:** {host} ({hostname})\n**Affected Port:** {port}\n**Source Scanner:** {source}\n**Detected At:** {scanned_at}\n\n---\n\n### Description\n{description}\n\n### Recommended Solution\n{solution}\n\n### References\n{references}\n\n---\n\n**SLA Deadline:** {sla_deadline} (72 hours from detection)",
+  "tasks": [
+    {
+      "title": "1. Verify Vulnerability",
+      "description": "Confirm the vulnerability is present. Document verification method and result.",
+      "order": 1
+    },
+    {
+      "title": "2. Identify Patch or Workaround",
+      "description": "Locate the vendor patch or workaround. Check patch compatibility with the environment.",
+      "order": 2
+    },
+    {
+      "title": "3. Schedule and Apply Remediation",
+      "description": "Apply patch during next available maintenance window within 72-hour SLA. Use linux-remediate.sh or docker-remediate.sh.",
+      "order": 3
+    },
+    {
+      "title": "4. Validate Fix",
+      "description": "Re-scan after remediation to confirm the vulnerability is resolved.",
+      "order": 4
+    },
+    {
+      "title": "5. Close Ticket",
+      "description": "Mark resolved. Update dashboard status. Document timeline.",
+      "order": 5
+    }
+  ],
+  "custom_fields": {
+    "cve_id":         { "type": "string",  "label": "CVE ID" },
+    "cvss_score":     { "type": "float",   "label": "CVSS Score" },
+    "epss_score":     { "type": "float",   "label": "EPSS Score" },
+    "risk_score":     { "type": "float",   "label": "Composite Risk Score" },
+    "affected_host":  { "type": "string",  "label": "Affected Host IP" },
+    "affected_port":  { "type": "string",  "label": "Affected Port" },
+    "scanner_source": { "type": "string",  "label": "Scanner Source" },
+    "sla_deadline":   { "type": "date",    "label": "SLA Deadline (72h)" },
+    "patch_applied":  { "type": "boolean", "label": "Patch Applied" },
+    "verified_fixed": { "type": "boolean", "label": "Verified Fixed" }
+  }
+}

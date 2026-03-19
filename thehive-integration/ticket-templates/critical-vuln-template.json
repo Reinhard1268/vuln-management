@@ -1,0 +1,50 @@
+{
+  "_comment": "File: thehive-integration/ticket-templates/critical-vuln-template.json",
+  "template_name": "critical-vulnerability",
+  "severity": 4,
+  "severity_label": "Critical",
+  "tlp": 2,
+  "pap": 2,
+  "tags": ["vulnerability", "critical", "vuln-mgmt"],
+  "title_format": "CRITICAL Vuln: {cve} on {host}",
+  "description_format": "## Critical Vulnerability Identified\n\n**CVE:** {cve}\n**CVSS Score:** {cvss_score}\n**EPSS Score:** {epss_score}\n**Risk Score:** {risk_score}/100\n**Affected Host:** {host} ({hostname})\n**Affected Port:** {port}\n**Source Scanner:** {source}\n**Detected At:** {scanned_at}\n\n---\n\n### Description\n{description}\n\n### Recommended Solution\n{solution}\n\n### References\n{references}\n\n---\n\n**SLA Deadline:** {sla_deadline} (24 hours from detection)",
+  "tasks": [
+    {
+      "title": "1. Verify Vulnerability",
+      "description": "Confirm the vulnerability exists on the affected host. Run manual verification steps. Document findings.",
+      "order": 1
+    },
+    {
+      "title": "2. Assess Business Impact",
+      "description": "Determine blast radius. Identify what data or systems could be compromised. Notify asset owner.",
+      "order": 2
+    },
+    {
+      "title": "3. Apply Patch / Mitigation",
+      "description": "Apply vendor patch or implement workaround. Follow remediation playbook at remediation/playbooks/critical-vuln-playbook.md",
+      "order": 3
+    },
+    {
+      "title": "4. Validate Fix",
+      "description": "Re-run scanner against affected host to confirm vulnerability is resolved. Document scan results.",
+      "order": 4
+    },
+    {
+      "title": "5. Close and Document",
+      "description": "Update ticket status to Resolved. Document all actions taken, timeline, and lessons learned.",
+      "order": 5
+    }
+  ],
+  "custom_fields": {
+    "cve_id":            { "type": "string",  "label": "CVE ID" },
+    "cvss_score":        { "type": "float",   "label": "CVSS Score" },
+    "epss_score":        { "type": "float",   "label": "EPSS Score" },
+    "risk_score":        { "type": "float",   "label": "Composite Risk Score" },
+    "affected_host":     { "type": "string",  "label": "Affected Host IP" },
+    "affected_port":     { "type": "string",  "label": "Affected Port" },
+    "scanner_source":    { "type": "string",  "label": "Scanner Source" },
+    "sla_deadline":      { "type": "date",    "label": "SLA Deadline (24h)" },
+    "patch_applied":     { "type": "boolean", "label": "Patch Applied" },
+    "verified_fixed":    { "type": "boolean", "label": "Verified Fixed" }
+  }
+}

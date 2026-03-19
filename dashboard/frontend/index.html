@@ -1,0 +1,253 @@
+<!-- File: dashboard/frontend/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vulnerability Management Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <span class="logo">🛡️ VulnMgmt</span>
+    <span class="subtitle">Project 09 — Reinhard1268</span>
+  </div>
+  <div class="header-right">
+    <span id="last-updated">Loading...</span>
+    <span class="badge badge-open" id="total-open">— open</span>
+    <button class="btn-refresh" onclick="refreshAll()">↻ Refresh</button>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- Stats Bar -->
+  <section class="stats-bar">
+    <div class="stat-card critical">
+      <div class="stat-label">CRITICAL</div>
+      <div class="stat-value" id="count-critical">—</div>
+    </div>
+    <div class="stat-card high">
+      <div class="stat-label">HIGH</div>
+      <div class="stat-value" id="count-high">—</div>
+    </div>
+    <div class="stat-card medium">
+      <div class="stat-label">MEDIUM</div>
+      <div class="stat-value" id="count-medium">—</div>
+    </div>
+    <div class="stat-card low">
+      <div class="stat-label">LOW</div>
+      <div class="stat-value" id="count-low">—</div>
+    </div>
+    <div class="stat-card info">
+      <div class="stat-label">TOTAL</div>
+      <div class="stat-value" id="count-total">—</div>
+    </div>
+  </section>
+
+  <!-- Charts Row -->
+  <section class="charts-row">
+    <div class="chart-box">
+      <h3>Severity Distribution</h3>
+      <canvas id="chart-severity"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Top 10 Affected Hosts</h3>
+      <canvas id="chart-hosts"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>CVSS vs EPSS</h3>
+      <canvas id="chart-scatter"></canvas>
+    </div>
+  </section>
+
+  <!-- Top 10 Priority -->
+  <section class="section">
+    <h2>🔥 Top 10 Priority Vulnerabilities</h2>
+    <div class="table-wrap">
+      <table id="tbl-top10">
+        <thead>
+          <tr>
+            <th>CVE</th><th>Name</th><th>Host</th>
+            <th>CVSS</th><th>EPSS</th><th>Risk Score</th><th>Priority</th>
+          </tr>
+        </thead>
+        <tbody id="top10-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Filters -->
+  <section class="section">
+    <h2>📋 All Vulnerabilities</h2>
+    <div class="filter-bar">
+      <select id="filter-severity" onchange="applyFilters()">
+        <option value="">All Severities</option>
+        <option value="Critical">Critical</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+      <select id="filter-status" onchange="applyFilters()">
+        <option value="">All Statuses</option>
+        <option value="open">Open</option>
+        <option value="in-progress">In Progress</option>
+        <option value="resolved">Resolved</option>
+        <option value="accepted">Accepted</option>
+      </select>
+      <select id="filter-source" onchange="applyFilters()">
+        <option value="">All Sources</option>
+        <option value="openvas">OpenVAS</option>
+        <option value="trivy">Trivy</option>
+      </select>
+      <button class="btn-export" onclick="exportCSV()">⬇ Export CSV</button>
+    </div>
+    <div class="table-wrap">
+      <table id="tbl-vulns">
+        <thead>
+          <tr>
+            <th>CVE</th><th>Name</th><th>Severity</th><th>Host</th>
+            <th>Port</th><th>CVSS</th><th>Source</th><th>Status</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="vuln-body"></tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button onclick="prevPage()">← Prev</button>
+      <span id="page-info">Page 1</span>
+      <button onclick="nextPage()">Next →</button>
+    </div>
+  </section>
+
+</main>
+
+<script src="charts.js"></script>
+<script>
+  const API = "http://localhost:5000";
+  let currentPage = 0;
+  const PAGE_SIZE = 20;
+  let allVulns = [];
+
+  async function fetchJSON(url) {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+
+  async function loadStats() {
+    const stats = await fetchJSON(`${API}/api/stats`);
+    const bySev = stats.by_severity || {};
+    document.getElementById("count-critical").textContent = bySev["Critical"] || 0;
+    document.getElementById("count-high").textContent     = bySev["High"]     || 0;
+    document.getElementById("count-medium").textContent   = bySev["Medium"]   || 0;
+    document.getElementById("count-low").textContent      = bySev["Low"]      || 0;
+    document.getElementById("count-total").textContent    = stats.total       || 0;
+    document.getElementById("total-open").textContent     = `${stats.open || 0} open`;
+    document.getElementById("last-updated").textContent   = "Updated: " + new Date().toLocaleTimeString();
+    return stats;
+  }
+
+  async function loadTop10() {
+    const data = await fetchJSON(`${API}/api/risk-scores?limit=10`);
+    const tbody = document.getElementById("top10-body");
+    tbody.innerHTML = "";
+    (data.data || []).forEach(v => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><code>${v.cve || v.id || "—"}</code></td>
+        <td title="${v.name}">${v.name.slice(0, 50)}${v.name.length > 50 ? "…" : ""}</td>
+        <td>${v.host || "—"}</td>
+        <td>${(v.cvss_score || 0).toFixed(1)}</td>
+        <td>${((v.epss_score || 0) * 100).toFixed(1)}%</td>
+        <td><span class="risk-badge ${riskClass(v.risk_score)}">${(v.risk_score || 0).toFixed(1)}</span></td>
+        <td><span class="sev-badge ${(v.priority_label||"LOW").toLowerCase()}">${v.priority_label || "—"}</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function loadVulns() {
+    const sev    = document.getElementById("filter-severity").value;
+    const status = document.getElementById("filter-status").value;
+    const source = document.getElementById("filter-source").value;
+    let url = `${API}/api/vulnerabilities?limit=${PAGE_SIZE}&offset=${currentPage * PAGE_SIZE}`;
+    if (sev)    url += `&severity=${sev}`;
+    if (status) url += `&status=${status}`;
+    if (source) url += `&source=${source}`;
+
+    const data  = await fetchJSON(url);
+    allVulns    = data.data || [];
+    const tbody = document.getElementById("vuln-body");
+    tbody.innerHTML = "";
+    allVulns.forEach(v => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><code>${v.cve || "—"}</code></td>
+        <td title="${v.name}">${v.name.slice(0, 45)}${v.name.length > 45 ? "…" : ""}</td>
+        <td><span class="sev-badge ${(v.severity||"").toLowerCase()}">${v.severity}</span></td>
+        <td>${v.host || "—"}</td>
+        <td>${v.port || "—"}</td>
+        <td>${(v.cvss_score || 0).toFixed(1)}</td>
+        <td>${v.source || "—"}</td>
+        <td><span class="status-badge ${(v.status||"").replace("-","")}">${v.status}</span></td>
+        <td>
+          <select onchange="updateStatus('${v.id}', this.value)" class="status-select">
+            <option value="open"        ${v.status==="open"?"selected":""}>Open</option>
+            <option value="in-progress" ${v.status==="in-progress"?"selected":""}>In Progress</option>
+            <option value="resolved"    ${v.status==="resolved"?"selected":""}>Resolved</option>
+            <option value="accepted"    ${v.status==="accepted"?"selected":""}>Accepted</option>
+          </select>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    document.getElementById("page-info").textContent =
+      `Page ${currentPage + 1} — ${data.total} total`;
+  }
+
+  async function updateStatus(id, status) {
+    await fetch(`${API}/api/vulnerabilities/${id}/status`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status })
+    });
+  }
+
+  function riskClass(score) {
+    if (score >= 80) return "risk-critical";
+    if (score >= 60) return "risk-high";
+    if (score >= 40) return "risk-medium";
+    return "risk-low";
+  }
+
+  function applyFilters() { currentPage = 0; loadVulns(); }
+  function prevPage()      { if (currentPage > 0) { currentPage--; loadVulns(); } }
+  function nextPage()      { currentPage++; loadVulns(); }
+
+  function exportCSV() {
+    if (!allVulns.length) return;
+    const headers = ["cve","name","severity","host","port","cvss_score","source","status"];
+    const rows    = allVulns.map(v => headers.map(h => `"${(v[h]||"").toString().replace(/"/g,'""')}"`).join(","));
+    const csv     = [headers.join(","), ...rows].join("\n");
+    const a       = document.createElement("a");
+    a.href        = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+    a.download    = `vulnerabilities-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
+
+  async function refreshAll() {
+    const stats = await loadStats();
+    await loadTop10();
+    await loadVulns();
+    if (window.buildCharts) window.buildCharts(stats);
+  }
+
+  refreshAll();
+  setInterval(refreshAll, 300000);
+</script>
+</body>
+</html>

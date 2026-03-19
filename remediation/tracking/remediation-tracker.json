@@ -1,0 +1,94 @@
+{
+  "_comment": "File: remediation/tracking/remediation-tracker.json",
+  "last_updated": "2024-06-15T10:00:00Z",
+  "summary": {
+    "total_tracked": 5,
+    "remediated": 2,
+    "in_progress": 2,
+    "accepted_risk": 1
+  },
+  "items": [
+    {
+      "id":           "track-001",
+      "cve":          "CVE-2021-44228",
+      "name":         "Apache Log4j Remote Code Execution (Log4Shell)",
+      "host":         "192.168.1.10",
+      "severity":     "Critical",
+      "cvss_score":   10.0,
+      "risk_score":   96.6,
+      "status":       "remediated",
+      "detected_at":  "2024-06-10T02:15:00Z",
+      "sla_deadline": "2024-06-11T02:15:00Z",
+      "patched_at":   "2024-06-10T14:30:00Z",
+      "assigned_to":  "reinhard",
+      "patch_version": "log4j 2.17.1",
+      "sla_met":      true,
+      "verified_at":  "2024-06-10T16:00:00Z",
+      "notes": "Upgraded log4j2 from 2.14.1 to 2.17.1. Restarted Java service. Re-scan confirmed resolution."
+    },
+    {
+      "id":           "track-002",
+      "cve":          "CVE-2023-44487",
+      "name":         "HTTP/2 Rapid Reset Attack",
+      "host":         "172.17.0.1 (elasticsearch container)",
+      "severity":     "Critical",
+      "cvss_score":   9.8,
+      "risk_score":   91.2,
+      "status":       "remediated",
+      "detected_at":  "2024-06-10T03:10:00Z",
+      "sla_deadline": "2024-06-11T03:10:00Z",
+      "patched_at":   "2024-06-10T18:00:00Z",
+      "assigned_to":  "reinhard",
+      "patch_version": "elasticsearch 8.13.2",
+      "sla_met":      true,
+      "verified_at":  "2024-06-10T19:00:00Z",
+      "notes": "Pulled latest elasticsearch image (8.13.2). Rebuilt container. Trivy rescan confirmed no Critical findings."
+    },
+    {
+      "id":           "track-003",
+      "cve":          "CVE-2021-34473",
+      "name":         "ProxyShell Microsoft Exchange RCE",
+      "host":         "192.168.1.20",
+      "severity":     "Critical",
+      "cvss_score":   9.8,
+      "risk_score":   88.4,
+      "status":       "in-progress",
+      "detected_at":  "2024-06-10T02:15:00Z",
+      "sla_deadline": "2024-06-11T02:15:00Z",
+      "assigned_to":  "reinhard",
+      "notes": "Exchange patch testing in progress on dev server. Awaiting confirmation of compatibility. Interim mitigation: autodiscover endpoint blocked at WAF."
+    },
+    {
+      "id":           "track-004",
+      "cve":          "CVE-2021-3156",
+      "name":         "Sudo Privilege Escalation (Baron Samedit)",
+      "host":         "192.168.1.30",
+      "severity":     "High",
+      "cvss_score":   7.8,
+      "risk_score":   67.3,
+      "status":       "in-progress",
+      "detected_at":  "2024-06-10T02:15:00Z",
+      "sla_deadline": "2024-06-13T02:15:00Z",
+      "assigned_to":  "reinhard",
+      "notes": "Patch identified: sudo 1.9.5p2. Scheduled for Thursday maintenance window."
+    },
+    {
+      "id":           "track-005",
+      "cve":          "CVE-2011-3389",
+      "name":         "SSL/TLS BEAST Attack Vulnerability",
+      "host":         "192.168.1.20",
+      "severity":     "Medium",
+      "cvss_score":   5.9,
+      "risk_score":   38.1,
+      "status":       "accepted",
+      "detected_at":  "2024-06-10T02:15:00Z",
+      "sla_deadline": "2024-07-10T02:15:00Z",
+      "assigned_to":  "reinhard",
+      "accepted_by":  "reinhard",
+      "accepted_at":  "2024-06-12T09:00:00Z",
+      "review_date":  "2024-07-12T09:00:00Z",
+      "notes": "TLS 1.0 is a lab-only server with no external exposure. Risk accepted pending TLS 1.2 upgrade scheduled for next month. Compensating control: traffic restricted to internal VLAN only."
+    }
+  ]
+}
+

@@ -1,0 +1,70 @@
+# Environment — never commit secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Database — contains real scan data
+dashboard/backend/vulndb.sqlite
+dashboard/backend/*.sqlite
+dashboard/backend/*.db
+
+# Scan results — can contain sensitive host/CVE data
+scanners/scan-results/*.json
+scanners/scan-results/*.xml
+scanners/scan-results/*.pdf
+# Keep sample results
+!scanners/scan-results/openvas-sample-results.json
+!scanners/scan-results/trivy-sample-results.json
+
+# EPSS cache
+prioritization/epss-scores/cache/
+
+# Remediation audit logs — may contain host info
+remediation/tracking/linux-remediation-*.log
+remediation/tracking/docker-remediation-*.log
+remediation/tracking/ticket-mapping.json
+remediation/tracking/backups/
+
+# Generated reports — contain real vuln data
+reports/weekly/weekly-report-2*.md
+reports/weekly/weekly-report-2*.pdf
+reports/monthly/monthly-report-2*.md
+reports/monthly/monthly-report-2*.pdf
+reports/executive/executive-report-2*.md
+reports/executive/executive-report-2*.pdf
+
+# Chart images generated at runtime
+reports/**/*.png
+dashboard/**/*.png
+
+# Logs
+*.log
+/tmp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
