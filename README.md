@@ -1,8 +1,6 @@
 # Vulnerability Management Automation Dashboard
 
 **Portfolio Project 9 of 10 | Reinhard | github.com/Reinhard1268**  
-**Certification:** EC-Council CCT  
-**Role:** Junior Security Analyst / Junior Penetration Tester  
 **Platform:** Kali Linux · Docker  
 **Integrates with:** Projects 01–08 (HomeSOC, Detection Engineering, SOAR, Threat Hunting, Zeek NSM, Cloud SOC, Malware Analysis, Phishing Simulation)
 
